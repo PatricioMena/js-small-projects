@@ -76,7 +76,7 @@ const menu = [
     desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`
   },
   {
-    id: 10,
+    ID: 10,
     title: 'triceratops steak',
     category: 'dinner',
     price: 99.99,
@@ -85,58 +85,50 @@ const menu = [
   }
 ];
 
-// I want to display dynamically all menu articles on my site
 const sectionCenter = document.querySelector('.section-center');
-const containerBtns = document.querySelector('.btn-container');
+const filterBtns = document.querySelectorAll('.filter-btn');
 
+// load items
 window.addEventListener('DOMContentLoaded', () => {
   displayMenuItems(menu);
-  createBtns();
-});
 
-// when user click on btn filter by category
-
-const createBtns = () => {
+  // ↓ Getting the categories in menu in dynamic way
+  // iterate over the menu array and grab the categories menu.map((item) => item.category) but we need to fing the unique values so:
   const categories = menu.reduce(
     (values, item) => {
       if (!values.includes(item.category)) {
         values.push(item.category);
       }
+      // when using return we always return the values
       return values;
     },
     ['all']
   );
+  console.log(categories);
+});
 
-  let displayBtns = categories
-    .map((category) => {
-      return `<button class="filter-btn" type="button" data-type="${category}">${category}</button>`;
-    })
-    .join('');
-  containerBtns.innerHTML = displayBtns;
-
-  const filterBtns = document.querySelectorAll('.filter-btn');
-
-  filterBtns.forEach((btn) =>
-    btn.addEventListener('click', (e) => {
-      const category = e.currentTarget.dataset.type;
-      console.log(category);
-      let menuCategory = menu.filter((menuItem) => {
-        if (menuItem.category === category) {
-          return menuItem;
-        }
-      });
-
-      if (category === 'all') {
-        displayMenuItems(menu);
-      } else {
-        displayMenuItems(menuCategory);
+// filter items
+filterBtns.forEach((btn) =>
+  btn.addEventListener('click', (e) => {
+    const category = e.currentTarget.dataset.type;
+    const menuCategory = menu.filter((menuItem) => {
+      if (menuItem.category === category) {
+        return menuItem;
       }
-    })
-  );
-};
+    });
+
+    if (category === 'all') {
+      displayMenuItems(menu);
+    } else {
+      displayMenuItems(menuCategory);
+    }
+  })
+);
 
 const displayMenuItems = (menuItems) => {
   let displayMenu = menuItems.map((item) => {
+    // console.log(item)
+    // We can return whatever we want, like <h1>Hello world</h1> in every item, we decide to return the html for our article  ;
     return `<article class="menu-item">
     <img src="${item.img}" alt="${item.title}" class="photo">
     <div class="item-info">
@@ -150,7 +142,7 @@ const displayMenuItems = (menuItems) => {
     </div>
   </article>`;
   });
-
   displayMenu = displayMenu.join('');
+  // adding html to the parent
   sectionCenter.innerHTML = displayMenu;
 };
